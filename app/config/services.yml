@@ -33,3 +33,9 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+
+
+# ...
+parameters:
+    contrat_directory: '%kernel.root_dir%/../web/uploads/contrat'
+
