@@ -28,6 +28,9 @@ class Contrat
 
     private $numClient;
 
+
+
+
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Service")
      * @ORM\JoinColumn(name="service_id", referencedColumnName="id")
@@ -56,6 +59,10 @@ class Contrat
      */
     private $dateCreation;
 
+    public function __construct() {
+        $this->dateCreation = new \DateTime();
+    }
+
     /**
      * @var string
      *
@@ -65,7 +72,7 @@ class Contrat
 
     /**
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Contrat")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Contrat")
      * @ORM\JoinColumn(name="contrat_id", referencedColumnName="id")
      */
     private $numContratParent;
@@ -142,6 +149,8 @@ class Contrat
 
         return $this;
     }
+
+
 
     /**
      * Get intitule
