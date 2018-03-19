@@ -3,14 +3,17 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity;
 
 /**
  * Service
- *
+ * @ORM\Entity
  * @ORM\Table(name="service")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ServiceRepository")
+ * @UniqueEntity(fields = "username", targetClass = "AppBundle\Entity\User", message="fos_user.username.already_used")
+ * @UniqueEntity(fields = "email", targetClass = "AppBundle\Entity\User", message="fos_user.email.already_used")
+
  */
-class Service
+class Service extends User
 {
     /**
      * @var int
@@ -19,7 +22,7 @@ class Service
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
@@ -33,13 +36,6 @@ class Service
      * @ORM\JoinColumn(name="entreprise_id", referencedColumnName="id")
      */
     private $numEntreprise;
-
-    /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    private $user;
-
 
     /**
      * Get id
@@ -99,29 +95,5 @@ class Service
         return $this->numEntreprise;
     }
 
-    /**
-     * Set user
-     *
-     * @param integer $user
-     *
-     * @return Client
-     */
-
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return int
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
 }
 

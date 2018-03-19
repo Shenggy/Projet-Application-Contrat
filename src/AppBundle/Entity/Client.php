@@ -3,14 +3,16 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity;
 
 /**
  * Client
- *
+ * @ORM\Entity
  * @ORM\Table(name="client")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ClientRepository")
+ * @UniqueEntity(fields = "username", targetClass = "AppBundle\Entity\User", message="fos_user.username.already_used")
+ * @UniqueEntity(fields = "email", targetClass = "AppBundle\Entity\User", message="fos_user.email.already_used")
  */
-class Client
+class Client extends User
 {
     /**
      * @var int
@@ -19,7 +21,7 @@ class Client
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
@@ -42,13 +44,6 @@ class Client
      */
     private $adresse;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="rue", type="string", length=255)
-     */
-    private $rue;
-
 
     /**
      * @var string
@@ -63,20 +58,6 @@ class Client
      * @ORM\Column(name="telephone", type="string", length=255)
      */
     private $telephone;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=255)
-     */
-    private $email;
-
-
-    /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    private $user;
 
     /**
      * @var string
@@ -198,7 +179,7 @@ class Client
      *
      * @return string
      */
-    public function getCodePotal()
+    public function getCodePostal()
     {
         return $this->codePostal;
     }
@@ -263,30 +244,6 @@ class Client
     public function getEmail()
     {
         return $this->email;
-    }
-
-    /**
-     * Set user
-     *
-     * @param integer $user
-     *
-     * @return Client
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return int
-     */
-    public function getUser()
-    {
-        return $this->user;
     }
 
     /**

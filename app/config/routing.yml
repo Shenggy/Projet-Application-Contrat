@@ -2,5 +2,33 @@ app:
     resource: '@AppBundle/Controller/'
     type: annotation
 
-fos_user:
-    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+service_registration:
+    path:  /register/service
+    defaults: { _controller: AppBundle:Service:register } #ptet pas le registration
+
+client_registration:
+    path:  /register/client
+    defaults: { _controller: AppBundle:Client:register }
+
+fos_user_registration_confirmed:
+    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    prefix: /confirmed
+
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+
+fos_user_profile:
+    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    prefix: /profile
+
+#fos_user_registration_register:
+ #   resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+  #  prefix: /register
+
+fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /resetting
+
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /profile
