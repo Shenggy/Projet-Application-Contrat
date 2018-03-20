@@ -18,18 +18,17 @@ class ContratRepository extends \Doctrine\ORM\EntityRepository
             $query = $entityManager->createQuery(
                 'SELECT c
         FROM AppBundle\Entity\Contrat c
-        WHERE  c.dateCreation in (select max(p.dateCreation) from AppBundle\Entity\Contrat p GROUP by p.numContratParent) and c.numService = :service
+        WHERE  c.id in (select max(p.id) from AppBundle\Entity\Contrat p GROUP by p.numContratParent having max(p.dateCreation)>\'2018-01-01\' order by p.dateCreation) and c.numService = :service
         GROUP BY c.numContratParent'
             )->setParameter('service', $numService);
 
-            // returns an array of Product objects
             return $query->execute();
         }else{
             $entityManager = $this->getEntityManager();
             $query = $entityManager->createQuery(
                 'SELECT c
         FROM AppBundle\Entity\Contrat c
-        WHERE  c.dateCreation in (select max(p.dateCreation) from AppBundle\Entity\Contrat p GROUP by p.numContratParent) and c.numClient = :client
+        WHERE  c.id in (select max(p.id) from AppBundle\Entity\Contrat p GROUP by p.numContratParent having max(p.dateCreation)>\'2018-01-01\' order by p.dateCreation) and c.numService = :client
         GROUP BY c.numContratParent'
             )->setParameter('client', $numService);
 
