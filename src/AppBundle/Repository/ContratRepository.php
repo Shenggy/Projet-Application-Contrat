@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Contrat;
 /**
  * ContratRepository
  *
@@ -10,4 +11,31 @@ namespace AppBundle\Repository;
  */
 class ContratRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findAllContrat($numService,$type)
+    {
+        if($type=='Service'){
+            $entityManager = $this->getEntityManager();
+            $query = $entityManager->createQuery(
+                'SELECT c
+        FROM AppBundle\Entity\Contrat c
+        WHERE  c.dateCreation in (select max(p.dateCreation) from AppBundle\Entity\Contrat p GROUP by p.numContratParent) and c.numService = :service
+        GROUP BY c.numContratParent'
+            )->setParameter('service', $numService);
+
+            // returns an array of Product objects
+            return $query->execute();
+        }else{
+            $entityManager = $this->getEntityManager();
+            $query = $entityManager->createQuery(
+                'SELECT c
+        FROM AppBundle\Entity\Contrat c
+        WHERE  c.dateCreation in (select max(p.dateCreation) from AppBundle\Entity\Contrat p GROUP by p.numContratParent) and c.numClient = :client
+        GROUP BY c.numContratParent'
+            )->setParameter('client', $numService);
+
+            // returns an array of Product objects
+            return $query->execute();
+        }
+
+    }
 }

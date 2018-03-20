@@ -16,39 +16,39 @@
                     <h2>Liste de mes contrats</h2>
                 </header>
 
+            {% if is_granted('ROLE_USER')== false %}
+                <p>Vous devez vous connecter afin d'accéder à votre liste de contrat</p>
+            {% else %}
+                {% if typeUser == 'Service'%}
                 <a class="btn btn-action btn-lg" href="{{ path("addContrat") }}" role="button">Ajouter un contrat</a>
-            {% if contrats is empty %}
-                <p>Vous avez ajouter aucun contrat pour le moment</p>
+                {% endif %}
+                {% if contrats is empty %}
+                    <p>Vous avez ajouté aucun contrat pour le moment</p>
                 {% endif %}
                 {% for contrat in contrats %}
 
                     <article class="col-md-8 maincontent">
-                    <div class="jumbotron top-space">
-                        <div class="top-margin">
-                            <label>Nom du contrat : </label>
-                            <p>{{ contrat.intitule }} </p>
+                        <div class="jumbotron top-space">
+                            <div class="top-margin">
+                                <label>Nom du contrat : </label>
+                                <p>{{ contrat.intitule }} </p>
+                            </div>
+                            <div class="top-margin">
+                                <label>Daite de création: </label>
+                                <p>{{ contrat.dateCreation |date("d/m/Y") }} </p>
+                            </div>
+                            <div class="top-margin">
+                                <label>Destinataire du contrat: </label>
+                                <p> nom  </p>
+                            </div>
+                            <div class="top-margin">
+                                <label>Type de contrat </label>
+                                <p>{{ contrat.type }}</p>
+                            </div>
+                            <p><a class="btn btn-action btn-lg"  href="{{ path('getHistory',{ 'contratID': contrat.numContratParent.id }) }}" role="button">Historique</a>                 <a class="btn btn-action btn-lg"  role="button" href="{{ asset('uploads/contrat/'~contrat.url) }}"target="_blank">Visualiser(PDF)</a>          <a class="btn btn-action btn-lg" href="{{ path('updateContrat',{ 'contratID': contrat.id }) }}" role="button">Modifier</a></p>
                         </div>
-                        <div class="top-margin">
-                            <label>Daite de création: </label>
-                            <p>{{ contrat.dateCreation |date("d/m/Y") }} </p>
-                        </div>
-                        <div class="top-margin">
-                            <label>Destinataire du contrat: </label>
-                            <p> nom  </p>
-                        </div>
-                        <div class="top-margin">
-                            <label>Type de contrat </label>
-                            <p>{{ contrat.type }}</p>
-                        </div>
-                        <p><a class="btn btn-action btn-lg" role="button">Historique</a>                 <a class="btn btn-action btn-lg"  role="button" href="{{ asset('uploads/contrat/'~contrat.url) }}"target="_blank">Visualiser(PDF)</a>          <a class="btn btn-action btn-lg" role="button">Modifier</a></p>
-                    </div>
-                </article>
+                    </article>
                 {% endfor %}
-                <!-- /Article -->
-            </div>	<!-- /container -->
-
-
-
-
-
+            {% endif %}
+            </div>
         {% endblock %}

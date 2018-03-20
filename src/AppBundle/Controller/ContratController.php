@@ -7,6 +7,7 @@ use AppBundle\Form\ContratType;
 use AppBundle\Entity\Service;
 
 use AppBundle\Entity\Client;
+use DoctrineTest\InstantiatorTestAsset\SerializableArrayObjectAsset;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,26 +33,15 @@ class ContratController extends Controller {
 
             $contrat = $form->getData();
             // TODO récupérer le id du client via nom et prénom
-            $nomUser=$form->get('nomUser')->getData();
-            $prenomUser=$form->get('prenomUser')->getData();
             $file = $contrat->getUrl();
             $fileName = md5(uniqid()).'.'.$file->guessExtension();
             $file->move(
                 $this->container->getParameter('contrat_directory'),
                 $fileName);
             $contrat->setUrl($fileName);
-            //$Client = $this->getDoctrine()->getManager()->getRepository(Client::class)->findBy([array("nom" => "Client", "prenom" => "test")],array('name' => 'ASC'),1 ,0);
-            //$Client = $repository->findBy([array("nom" => $nomUser, "prenom" => $prenomUser)],array('name' => 'ASC'),1 ,0);
-            //$Client = $repository->findBy([array("nom" => "Client", "prenom" => "test")],array('name' => 'ASC'),1 ,0);
-            // pas sur du getId
-            //$idClient = $Client->getId();
-            $idClient = 3;
-            //$contrat -> setNumService($user);
-            $entityManager = $this->getDoctrine()->getManager();
-            $Client = $entityManager->getRepository(\AppBundle\Entity\Client::class)->find(3);
-            $Service = $entityManager->getRepository(Service::class)->find(1);
-            $contrat -> setNumService($Service);
-            $contrat -> setNumClient($Client);
+            $idUser = $this->getUser();
+            $contrat -> setNumService($idUser);
+            $contrat -> setNumContratParent($contrat);
             //TODO GERER ERREUR SI USER PAS CO
             $em->persist($contrat);
             $em->flush();
@@ -68,13 +58,86 @@ class ContratController extends Controller {
 
     public function findAllContrat()
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        // TODO connexion pour récuperer user
-        //$userId = $this->getUser();
-       // $userId->getId();
-        $userId='1';
-        $contrats = $entityManager->getRepository(Contrat::class)->findBy(["numService"=>$userId]);
-        return $this->render('contrat/listContrat.html.twig', array('contrats' => $contrats));
+       // $securityContext = $this->container->get('security.authorization_checker');
+        //if ($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $entityManager = $this->getDoctrine()->getManager();
+            // TODO connexion pour récuperer user
+            $user = $this->getUser();
+            $userId = $user->getId();
+            $typeUser = $entityManager->getMetadataFactory()->getMetadataFor(get_class($user))->getName();
+
+            if($typeUser=='AppBundle\Entity\Service'){
+                $type='Service';
+                $contrats = $entityManager->getRepository(Contrat::class)->findAllContrat($userId,$type);
+                return $this->render('contrat/listContrat.html.twig', array('typeUser' => $type,'contrats' => $contrats));
+                //SELECT `id`,`intitule`,`url`,max(`dateCreation`),`type`,`client_id`,`service_id`,`contrat_id` FROM contrat GROUP by `contrat_id`
+            }else if ($typeUser=='AppBundle\Entity\Client'){
+                $type='Client';
+               // $contrats = $entityManager->getRepository(Contrat::class)->findBy(["numClient"=>$userId]);
+                $contrats = $entityManager->getRepository(Contrat::class)->findAllContrat($userId,$type);
+                return $this->render('contrat/listContrat.html.twig',  array('typeUser' => $type,'contrats' => $contrats));
+            }
+       // }
+        //else{
+        //    return $this->render('Security/login_content.html.twig');
+        //}
     }
+
+    /**
+     * @Route("/historique/{contratID}", name="getHistory")
+     *
+     * @ParamConverter("contrat", options={"mapping": {"contratID" : "id"}})
+     */
+
+    public function getHistory(Contrat $contratID) {
+        $contrats = $this->getDoctrine()
+            ->getRepository('AppBundle:Contrat')->findBy([
+                "numContratParent" => $contratID
+            ]);
+        return $this->render("contrat/historiqueContrat.html.twig", array('contrats' => $contrats, 'contratHisto'=> $contratID));
+    }
+
+
+    /**
+     * @Route("/Modification/{contratID}", name="updateContrat")
+     *
+     * @ParamConverter("contrat", options={"mapping": {"contratID" : "id"}})
+     */
+
+    public function updateContrat(Request $request,Contrat $contratID) {
+        $contratModif = $this->getDoctrine()
+            ->getRepository('AppBundle:Contrat')->findOneBy([
+                "id" => $contratID
+            ]);
+        $contrat = new Contrat();
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(ContratType::class);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            $contrat = $form->getData();
+            $parent = $contratModif->getNumContratParent();
+            $client = $contratModif-> getNumClient();
+            // TODO récupérer le id du client via nom et prénom
+            $file = $contrat->getUrl();
+            $fileName = md5(uniqid()).'.'.$file->guessExtension();
+            $file->move(
+                $this->container->getParameter('contrat_directory'),
+                $fileName);
+            $contrat->setUrl($fileName);
+            $idUser = $this->getUser();
+            $contrat -> setNumService($idUser);
+            $contrat -> setNumContratParent($parent);
+            $contrat -> setNumClient($client);
+            //TODO GERER ERREUR SI USER PAS CO
+            $em->persist($contrat);
+            $em->flush();
+            return $this->redirectToRoute('findAllContrat');
+        }
+        $formView = $form->createView(); //On crée la vue
+        return $this->render('contrat/modifyContrat.html.twig', array('form'=>$formView,'contrat'=>$contratModif)); //On l'affiche
+
+    }
+
+
 
 }

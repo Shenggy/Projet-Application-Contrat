@@ -1,0 +1,49 @@
+{% extends "base.html.twig" %}
+
+
+        {% block body %}
+            <!-- container -->
+            <div class="container">
+
+                <ol class="breadcrumb">
+                    <li><a href="{{ path('homepage') }}">Home</a></li>
+                    <li><a href="{{ path('findAllContrat') }}">Gérer mes contrats</a></li>
+                    <li class="active">Historique du contrat</li>
+                </ol>
+
+                <!-- Article main content -->
+
+                <header class="page-header">
+                    <h2>Historique du contrat {{ contratHisto.intitule }}</h2>
+                </header>
+
+                    {% if contrats is empty %}
+                        <p>Il n'a pas d'historique pour le contrat selectionné</p>
+                    {% endif %}
+                    {% for contrat in contrats %}
+
+                        <article class="col-md-8 maincontent">
+                            <div class="jumbotron top-space">
+                                <div class="top-margin">
+                                    <label>Nom du contrat : </label>
+                                    <p>{{ contrat.intitule }} </p>
+                                </div>
+                                <div class="top-margin">
+                                    <label>Daite de création: </label>
+                                    <p>{{ contrat.dateCreation |date("d/m/Y") }} </p>
+                                </div>
+                                <div class="top-margin">
+                                    <label>Destinataire du contrat: </label>
+                                    <p> nom  </p>
+                                </div>
+                                <div class="top-margin">
+                                    <label>Type de contrat </label>
+                                    <p>{{ contrat.type }}</p>
+                                </div>
+                                <p><a class="btn btn-action btn-lg"  role="button" href="{{ asset('uploads/contrat/'~contrat.url) }}"target="_blank">Visualiser(PDF)</a></p>
+                            </div>
+                        </article>
+                    {% endfor %}
+
+            </div>
+        {% endblock %}

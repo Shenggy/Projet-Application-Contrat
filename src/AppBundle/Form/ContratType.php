@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 class ContratType extends AbstractType
 {
     /**
@@ -18,11 +18,15 @@ class ContratType extends AbstractType
         $builder->add('intitule')
 
             ->add('url', FileType::class, array('label' => 'Contrat (PDF file)'))
-                ->add('nomUser',TextType::class, array('mapped' => false))
-                ->add('prenomUser',TextType::class,array('mapped' => false))
                 ->add('type')
-                ;
+            ->add('numClient', EntityType::class,array(
+                'class'=> 'AppBundle:Client',
+                'choice_label'=> 'nom',
+                'required'=>true,
+                'multiple'=>false
+            ));
     }
+
     /**
      * {@inheritdoc}
      */

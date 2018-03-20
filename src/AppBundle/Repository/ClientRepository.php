@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Contrat;
 /**
  * ClientRepository
  *
@@ -10,20 +11,6 @@ namespace AppBundle\Repository;
  */
 class ClientRepository extends \Doctrine\ORM\EntityRepository
 {
-    /**
-     * @param $nom, $prenom
-     * @return Client
-     */
-    public function findClientByName($nom,$prenom) {
 
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-            'SELECT c
-        FROM AppBundle\Entity\Client c
-        WHERE c.nom = :nom and c.prenom = :prenom
-        ORDER BY p.price ASC'
-        )->setParameters(array('nom' => $nom, 'prenom' => $prenom));;
-        return $query->execute();
-    }
 
 }

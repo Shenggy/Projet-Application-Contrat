@@ -22,7 +22,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <h3 class="thin text-center">Se connecter à votre compte</h3>
-                        <p class="text-center text-muted">Vous n'avez pas encore de compte ? Créez-en un ! <a href="signupEnt.html"> en tant qu'Entreprise</a> ou  <a href="signupCli.html">Client</a>  </p>
+                        <p class="text-center text-muted">Vous n'avez pas encore de compte ? Créez-en un ! <a href="{{ path('service_registration') }}"> en tant qu'Entreprise</a> ou  <a href="{{ path('client_registration') }}">Client</a>  </p>
                         <hr>
 
 <form action="{{ path("fos_user_security_check") }}" method="post">
