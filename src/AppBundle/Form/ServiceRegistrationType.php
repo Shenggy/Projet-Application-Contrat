@@ -8,6 +8,7 @@
 
 namespace AppBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,6 +18,12 @@ class ServiceRegistrationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('nom')
+                ->add('numEntreprise', EntityType::class,array(
+                    'class'=> 'AppBundle:Entreprise',
+                    'choice_label'=> 'nom',
+                    'required'=>true,
+                    'multiple'=>true
+                ))
         ;
     }
 

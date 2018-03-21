@@ -1,21 +1,89 @@
+<div class="container">
 
-<form action="
+    <ol class="breadcrumb">
+        <li><a href="index.html">Home</a></li>
+        <li class="active">Inscription</li>
+    </ol>
 
-{% if app.request.attributes.get('_route') == 'service_registration' %}
-{{ path('service_registration') }}
-{% endif %}
+    <div class="row">
 
-{% if app.request.attributes.get('_route') == 'client_registration' %}
-{{ path('client_registration') }}
-{% endif %}
-" method="POST" class="fos_user_registration_register">
-    <div class="top-margin">
-    {{ form_widget(form) }}
+        <!-- Article main content -->
+        <article class="col-xs-12 maincontent">
+            <header class="page-header">
+                <h1 class="page-title">S'inscrire</h1>
+            </header>
 
+            <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3 class="thin text-center">Créez votre compte</h3>
+                        <p class="text-center text-muted">Déjà inscrit ? <a href="{{ path('fos_user_security_login') }}"> Connectez vous ici !</a>  </p>
+                        <hr>
+
+                        <form action="
+
+                        {% if app.request.attributes.get('_route') == 'service_registration' %}
+                        {{ path('service_registration') }}
+                        {% endif %}
+
+                        {% if app.request.attributes.get('_route') == 'client_registration' %}
+                        {{ path('client_registration') }}
+                        {% endif %}
+                        " method="POST" class="fos_user_registration_register">
+                            <div class="top-margin">
+
+                                <label for="form_username">Username</label><br>
+                                {{ form_widget(form.username)}}
+                                <br>
+                                <label for="form_email">Email</label><br>
+                                {{ form_widget(form.email)}}
+                                <br>
+                                <label for="form_plainPassword.first">Mot de passe</label><br>
+                                {{ form_widget(form.plainPassword.first)}}
+                                <br>
+                                <label for="form_plainPassword.second">Confirmer le mot de passe</label><br>
+                                {{ form_widget(form.plainPassword.second)}}
+                                <br>
+                                <label for="form_nom">Nom</label><br>
+                                {{ form_widget(form.nom)}}
+                                <br>
+                                {% if app.request.attributes.get('_route') == 'service_registration' %}
+                                    <label for="form_entreprise">Entreprise</label><br>
+                                    {{ form_widget(form.numEntreprise)}}
+                                {% endif %}
+                                {% if app.request.attributes.get('_route') == 'client_registration' %}
+                                    <br>
+                                    <label for="form_nom">Prénom</label><br>
+                                    {{ form_widget(form.prenom)}}
+                                    <br>
+                                    <label for="form_nom">Adresse</label><br>
+                                    {{ form_widget(form.adresse)}}
+                                    <br>
+                                    <label for="form_nom">Code Postal</label><br>
+                                    {{ form_widget(form.codePostal)}}
+                                    <br>
+                                    <label for="form_nom">Numéro de téléphone</label><br>
+                                    {{ form_widget(form.telephone)}}
+                                    <br>
+                                    <label for="form_nom">Statut</label><br>
+                                    {{ form_widget(form.statut)}}
+                                    <br>
+                                {% endif %}
+
+                                {{ form_widget(form) }}
+
+
+                            </div>
+                            <hr>
+                            <div class="col-lg-8 text-right">
+                                <input type="submit" id="_submit" class="btn btn-action" name="_submit" value="{{ 'Inscription'|trans }}" />
+                            </div>
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </article>
     </div>
-    <div>
-        <input type="submit" value="{{ 'registration.submit'|trans }}" />
-    </div>
-
-
-</form>
+</div>

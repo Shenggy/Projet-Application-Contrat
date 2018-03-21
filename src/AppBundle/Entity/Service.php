@@ -32,7 +32,7 @@ class Service extends User
     private $nom;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Entreprise")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Entreprise")
      * @ORM\JoinColumn(name="entreprise_id", referencedColumnName="id")
      */
     private $numEntreprise;
