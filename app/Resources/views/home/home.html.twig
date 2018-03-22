@@ -11,7 +11,7 @@
             <div class="row">
                 <h1 class="lead"> Gestion de contrat en ligne</h1>
                 <p class="tagline">Gérer vos contrats en toute simplicité avec ContratAcu ! </p>
-                <p><a class="btn btn-default btn-lg"  href="about.html" role="button">Gérer mes contrats</a>
+                <p><a class="btn btn-default btn-lg"  href="{{ path("findAllContrat") }}" role="button">Gérer mes contrats</a>
                     {% if is_granted('ROLE_USER') %}
                     <a role="button" class="btn btn-action btn-lg" href="{{ path("fos_user_security_logout" ) }}">Se déconnecter</a>
                         {% else %}

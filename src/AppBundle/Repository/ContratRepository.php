@@ -35,6 +35,27 @@ class ContratRepository extends \Doctrine\ORM\EntityRepository
             // returns an array of Product objects
             return $query->execute();
         }
+    }
 
+    public function findSearchContrat($like,$type,$id){
+        $li= "%".$like."%";
+        $entityManager = $this->getEntityManager();
+        if($type=='Service'){
+            $query = $entityManager->createQuery(
+                'SELECT c
+        FROM AppBundle\Entity\Contrat c
+        WHERE c.intitule LIKE :resp and c.numService = :serv'
+            )->setParameter('resp', $li)->setParameter('serv', $id);
+        }else{
+            $query = $entityManager->createQuery(
+                'SELECT c
+        FROM AppBundle\Entity\Contrat c
+        WHERE c.intitule LIKE :resp and c.numClient = :serv'
+            )->setParameter('resp', $li)->setParameter('serv', $id);
+        }
+
+
+        // returns an array of Product objects
+        return $query->execute();
     }
 }

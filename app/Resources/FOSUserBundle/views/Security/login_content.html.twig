@@ -1,9 +1,6 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
-{% if error %}
-    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    <p> Veuillez réssayer</p>
-{% endif %}
+
 <div class="container">
 
     <ol class="breadcrumb">
@@ -23,7 +20,10 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <h3 class="thin text-center">Se connecter à votre compte</h3>
-                        <p class="text-center text-muted">Vous n'avez pas encore de compte ? Créez-en un ! <a href="{{ path('service_registration') }}"> en tant qu'Entreprise</a> ou  <a href="{{ path('client_registration') }}">Client</a>  </p>
+                        <p class="text-center text-muted">Vous n'avez pas encore de compte ? Créez-en un ! <a href="{{ path('service_registration') }}"> en tant qu'Entreprise</a> ou  <a href="{{ path('client_registration') }}">Client</a>.</p>
+                        {% if error %}
+                            <p class="text-center text-muted" style=" color: red;"> Veuillez réssayer, vos identifiants sont incorrectes.</p>
+                        {% endif %}
                         <hr>
 
 <form action="{{ path("fos_user_security_check") }}" method="post">

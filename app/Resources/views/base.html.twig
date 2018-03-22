@@ -35,14 +35,14 @@
                     <ul class="nav navbar-nav pull-right">
                         <li class="active"><a href="{{ path("homepage") }}">Accueil</a></li>
                         <li><a href="{{ path("findAllContrat") }}">Gérer mes contrats</a></li>
-                        <li><a href="about.html">Mon profil</a></li>
-                        <li><a href="contact.html">Contact</a></li>
+                        <li> <a href="{{ path("contactpage") }}" > Contact </a> </li>
                         {% if is_granted('ROLE_USER') %}
-                            <li><a class="btn" href="{{ path("fos_user_security_logout" ) }}">Se déconnecter</a>
+                            <li><a class= "btn" href="{{ path("fos_user_security_logout" ) }}">Se déconnecter</a>
                         {% else %}
                             <li class="nav-item">
-                                <a class="btn" href="{{ path("fos_user_security_login" ) }}">Se Connecter</a>
+                                <a class="btn" href="{{ path("fos_user_security_login" ) }}">Se connecter</a>
                             </li>
+
                         {%  endif %}
                     </ul>
                 </div><!--/.nav-collapse -->

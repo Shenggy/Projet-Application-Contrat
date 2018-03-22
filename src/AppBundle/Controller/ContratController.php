@@ -5,7 +5,8 @@ use AppBundle\AppBundle;
 use AppBundle\Entity\Contrat;
 use AppBundle\Form\ContratType;
 use AppBundle\Entity\Service;
-
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use AppBundle\Entity\Client;
 use DoctrineTest\InstantiatorTestAsset\SerializableArrayObjectAsset;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -56,31 +57,49 @@ class ContratController extends Controller {
      * @return \Symfony\Component\HttpFoundation\Response
      */
 
-    public function findAllContrat()
-    {
-       // $securityContext = $this->container->get('security.authorization_checker');
-        //if ($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $entityManager = $this->getDoctrine()->getManager();
-            // TODO connexion pour récuperer user
+    public function findAllContrat(Request $request)
+    { $entityManager = $this->getDoctrine()->getManager();
+        $securityContext = $this->container->get('security.authorization_checker');
+
+        if ($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = $this->getUser();
             $userId = $user->getId();
             $typeUser = $entityManager->getMetadataFactory()->getMetadataFor(get_class($user))->getName();
+            $defaultData = array('Recherche' => 'Tapez le nom du contrat');
+            $form2 = $this->createFormBuilder($defaultData)
+                ->add('search', TextType::class)
+                ->add('send', SubmitType::class)
+                ->getForm();
+            $form2->handleRequest($request);
+            if ($form2->isSubmitted() && $form2->isValid()) {
+                // data is an array with "name", "email", and "message" keys
+                $data = $form2->getData();
+                $like = $data['search'];
+                if($typeUser=='AppBundle\Entity\Service') {
+                    $type = 'Service';
+                }else{
+                    $type='Client';
+                }
+                $contrats = $entityManager->getRepository(Contrat::class)->findSearchContrat($like,$type,$userId);
+                return $this->render('contrat/searchContrat.html.twig', array('contrats' => $contrats, 'search'=>$like)); //On l'affiche
+            }
+            $formView = $form2->createView(); //On crée la vue
 
             if($typeUser=='AppBundle\Entity\Service'){
                 $type='Service';
                 $contrats = $entityManager->getRepository(Contrat::class)->findAllContrat($userId,$type);
-                return $this->render('contrat/listContrat.html.twig', array('typeUser' => $type,'contrats' => $contrats));
+                return $this->render('contrat/listContrat.html.twig', array('typeUser' => $type,'contrats' => $contrats,'form'=>$formView));
                 //SELECT `id`,`intitule`,`url`,max(`dateCreation`),`type`,`client_id`,`service_id`,`contrat_id` FROM contrat GROUP by `contrat_id`
             }else if ($typeUser=='AppBundle\Entity\Client'){
                 $type='Client';
                // $contrats = $entityManager->getRepository(Contrat::class)->findBy(["numClient"=>$userId]);
                 $contrats = $entityManager->getRepository(Contrat::class)->findAllContrat($userId,$type);
-                return $this->render('contrat/listContrat.html.twig',  array('typeUser' => $type,'contrats' => $contrats));
+                return $this->render('contrat/listContrat.html.twig',  array('typeUser' => $type,'contrats' => $contrats,'form'=>$formView));
             }
-       // }
-        //else{
-        //    return $this->render('Security/login_content.html.twig');
-        //}
+       }
+        else{
+            return $this->render('contrat/listContrat.html.twig');
+        }
     }
 
     /**
@@ -139,5 +158,26 @@ class ContratController extends Controller {
     }
 
 
+    /**
+     * @Route("/searchContrat", name="searchContrat")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
 
+    public function searchContrat( Request $request) {
+
+        $defaultData = array('Recherche' => 'Tapez le nom du contrat');
+        $form2 = $this->createFormBuilder($defaultData)
+            ->add('name', TextType::class)
+            ->getForm();
+        $form2->handleRequest($request);
+
+        if ($form2->isSubmitted() && $form2->isValid()) {
+            // data is an array with "name", "email", and "message" keys
+            $data = $form2->getData();
+
+        }
+        $formView = $form2->createView(); //On crée la vue
+        return $this->render('contrat/addContrat.html.twig', array('form'=>$formView)); //On l'affiche
+    }
 }

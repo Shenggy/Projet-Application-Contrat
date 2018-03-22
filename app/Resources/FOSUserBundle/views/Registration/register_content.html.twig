@@ -50,6 +50,10 @@
                                 {% if app.request.attributes.get('_route') == 'service_registration' %}
                                     <label for="form_entreprise">Entreprise</label><br>
                                     {{ form_widget(form.numEntreprise)}}
+
+                                {% endif %}
+                                {% if app.request.attributes.get('_route') == 'service_registration' %}
+                                    <p class="text-center text-muted">Si votre entreprise n'apparrait pas dans la liste, <a href="{{ path("addEntreprise") }}" >ajoutez la !</a> </p>
                                 {% endif %}
                                 {% if app.request.attributes.get('_route') == 'client_registration' %}
                                     <br>

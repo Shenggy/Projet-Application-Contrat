@@ -4,51 +4,75 @@
         {% block body %}
             <!-- container -->
             <div class="container">
+                    <ol class="breadcrumb">
+                        <li><a href="{{ path('homepage') }}">Home</a></li>
+                        <li class="active">Gérer mes contrats</li>
+                    </ol>
+                    <div class="row">
 
-                <ol class="breadcrumb">
-                    <li><a href="index.html">Home</a></li>
-                    <li class="active">Gérer mes contrats</li>
-                </ol>
 
-                <!-- Article main content -->
-
-                <header class="page-header">
-                    <h2>Liste de mes contrats</h2>
-                </header>
-
-            {% if is_granted('ROLE_USER')== false %}
-                <p>Vous devez vous connecter afin d'accéder à votre liste de contrat</p>
-            {% else %}
-                {% if typeUser == 'Service'%}
-                <a class="btn btn-action btn-lg" href="{{ path("addContrat") }}" role="button">Ajouter un contrat</a>
-                {% endif %}
-                {% if contrats is empty %}
-                    <p>Vous avez ajouté aucun contrat pour le moment</p>
-                {% endif %}
-                {% for contrat in contrats %}
-
-                    <article class="col-md-8 maincontent">
-                        <div class="jumbotron top-space">
-                            <div class="top-margin">
-                                <label>Nom du contrat : </label>
-                                <p>{{ contrat.intitule }} </p>
-                            </div>
-                            <div class="top-margin">
-                                <label>Daite de création: </label>
-                                <p>{{ contrat.dateCreation |date("d/m/Y") }} </p>
-                            </div>
-                            <div class="top-margin">
-                                <label>Destinataire du contrat: </label>
-                                <p> nom  </p>
-                            </div>
-                            <div class="top-margin">
-                                <label>Type de contrat </label>
-                                <p>{{ contrat.type }}</p>
-                            </div>
-                            <p><a class="btn btn-action btn-lg"  href="{{ path('getHistory',{ 'contratID': contrat.numContratParent.id }) }}" role="button">Historique</a>                 <a class="btn btn-action btn-lg"  role="button" href="{{ asset('uploads/contrat/'~contrat.url) }}"target="_blank">Visualiser(PDF)</a>          <a class="btn btn-action btn-lg" href="{{ path('updateContrat',{ 'contratID': contrat.id }) }}" role="button">Modifier</a></p>
-                        </div>
-                    </article>
-                {% endfor %}
+                    </br>
+            {% if is_granted('ROLE_USER')== true %}
+                    {% if typeUser == 'Service'%}
+                        <a class="btn btn-action btn-lg" href="{{ path("addContrat") }}" role="button">Ajouter un contrat</a>
+                    {% endif %}
             {% endif %}
+                    <!-- Article main content -->
+                    <header class="page-header">
+                        <h2>Liste de mes contrats</h2>
+                    </header>
+                        {% if is_granted('ROLE_USER')== false %}
+                            <p>Vous devez vous <a href="{{ path("fos_user_security_login" ) }}">connecter</a> afin d'accéder à votre liste de contrat</p>
+                        {% else %}
+                        {{ form_start(form) }}
+                        {{ form_errors(form) }}
+                        <div class="row widget" style="  float: right;">
+                                </br>
+                            <div >
+                                {{ form_row(form.search,{ 'label': 'Rechercher', 'attr':{'placeholder':'Nom du contrat'} }) }}
+                            </div>
+                            </br>
+                            <div class="col-sm-4">
+                                {{ form_row(form.send, { 'label': 'Valider', 'attr': {'class': 'btn btn-action btn-lg'} }) }}
+                            </div>
+                        </div>
+
+                        {{ form_end(form) }}
+
+
+
+
+                    {% if contrats is empty %}
+                        <p>Vous avez ajouté aucun contrat pour le moment</p>
+                    {% endif %}
+                        <article class="col-md-9 maincontent">
+                    {% for contrat in contrats %}
+                        <article >
+                            <div class="jumbotron top-space">
+                                <div class="top-margin">
+                                    <label>Nom du contrat : </label>
+                                    <p>{{ contrat.intitule }} </p>
+                                </div>
+                                <div class="top-margin">
+                                    <label>Daite de création: </label>
+                                    <p>{{ contrat.dateCreation |date("d/m/Y") }} </p>
+                                </div>
+                                <div class="top-margin">
+                                    <label>Destinataire du contrat: </label>
+                                    <p> nom  </p>
+                                </div>
+                                <div class="top-margin">
+                                    <label>Type de contrat </label>
+                                    <p>{{ contrat.type }}</p>
+                                </div>
+                                <p><a class="btn btn-action btn-lg"  href="{{ path('getHistory',{ 'contratID': contrat.numContratParent.id }) }}" role="button">Historique</a>                 <a class="btn btn-action btn-lg"  role="button" href="{{ asset('uploads/contrat/'~contrat.url) }}"target="_blank">Visualiser(PDF)</a>          <a class="btn btn-action btn-lg" href="{{ path('updateContrat',{ 'contratID': contrat.id }) }}" role="button">Modifier</a></p>
+                            </div>
+                        </article>
+                    {% endfor %}
+                        </article>
+                {% endif %}
+
+                    </div>
             </div>
-        {% endblock %}
+
+        {% endblock%}

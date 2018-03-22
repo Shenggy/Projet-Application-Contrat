@@ -1,0 +1,44 @@
+{% extends "base.html.twig" %}
+
+
+        {% block body %}
+
+            <div class="container">
+
+                <ol class="breadcrumb">
+                    <li><a href="{{ path('homepage') }}">Home</a></li>
+                    <li class="active">Ajout d'une entreprise</li>
+                </ol>
+
+                <div class="row">
+
+                    <!-- Article main content -->
+                    <article class="col-xs-12 maincontent">
+                        <header class="page-header">
+                            <h1 class="page-title">Ajouter une entreprise</h1>
+                        </header>
+
+                        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <h3 class="thin text-center">Ajouter une entreprise</h3>
+                                    {{ form_start(form) }}
+                                    {{ form_widget(form) }}
+                                    <div class="row">
+
+                                        <div class="col-lg-4 text-right">
+                                            <button  href="{{ path("addEntreprise") }}" class="btn btn-action" type="submit">Envoyer</button>
+                                        </div>
+                                    </div>
+                                    {{ form_end(form) }}
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </article>
+                    <!-- /Article -->
+
+                </div>
+            </div>	<!-- /container -->
+        {% endblock %}
